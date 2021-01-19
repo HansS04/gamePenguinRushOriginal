@@ -93,7 +93,7 @@ let lights = {
 
 class SnowMans {
     constructor(x, y) {
-        this.x = Math.floor(Math.random()*canvas.width -500)+300
+        this.x = Math.floor(Math.random()*(canvas.width -200))+100
         this.y = canvas.height + 50;
         this.image = new Image();
         this.image.src = 'img/snowman.png';
@@ -106,7 +106,7 @@ class SnowMans {
 
     port() {
       //window.setTimeout(function(){ 
-        this.x = Math.floor(Math.random()*canvas.width -500)+330
+        this.x = Math.floor(Math.random()*(canvas.width -150))+100
         this.y = canvas.height + 300;
         
    // }, 2000);
@@ -177,7 +177,7 @@ create();
 function createsnowman() {
     setTimeout(function(){ 
         createsnowman();
-    }, 3000);
+    }, 300);
     snowman.push(new SnowMans());
 }
 createsnowman();
@@ -209,19 +209,15 @@ function drawAll() {
         }
     }
 
-//snowman[j].x + snowman[j].width/2 > skier.x && snowman[j].x + snowman[j].width/2 < skier.x + skier.width
+
 
     for (let j = 0; j < snowman.length; j++) {
         console.log(snowman[j]);
         console.log(skier.x);
         snowman[j].move();
         snowman[j].draw();
-        if (snowman[j].y < -300) {
-
-            snowman[j].port();
-
-        }
-        if(snowman[j].x + 130 > skier.x && snowman[j].x + 130 < skier.x + 160 && snowman[j].y < skier.y && snowman[j].y + 100 > skier.y  ){
+     
+        if(snowman[j].x + 100 > skier.x && snowman[j].x + 80 < skier.x + 140 && snowman[j].y < skier.y && snowman[j].y + 100 > skier.y  ){
             clearInterval(stopky2);
             
             if (confirm("Váš čas je : " + minuty + " minut " + sekundy + " sekund " + milisekundy + " milisekund ")) {
