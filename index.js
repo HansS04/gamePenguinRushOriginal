@@ -50,27 +50,25 @@ let skier = {
     keys : [],
     speed : 5,
     move: function (){
-        if (this.keys['ArrowUp']) {
-            if (this.y > this.speed) {
-                this.y--;
-            }
+        if (this.keys['KeyW']) {
+           
+                this.y-=this.speed;
+            
         }
         
-        if (this.keys['ArrowDown']) {
-            if (this.y < this.speed) {
-                this.y++;
-            }
+        if (this.keys['KeyS']) {
+           this.y+=this.speed;
         }
 
-        if (this.keys['ArrowRight']) {
-            if (this.x < this.speed) {
-                this.x++;
-            }
+        if (this.keys['KeyD']) {
+  
+                this.x+=this.speed;
+            
         }
-        if (this.keys['ArrowLeft']) {
-            if (this.x > -this.speed) {
-                this.x--;
-            }
+        if (this.keys['KeyA']) {
+       
+                this.x-=this.speed;
+          
         }
         
     },
@@ -92,6 +90,40 @@ let lights = {
     }
 }
 /*objekt pro vykreslení stromu*/
+
+class SnowMans {
+    constructor(x, y) {
+        this.x = Math.floor(Math.random()*canvas.width -500)+300
+        this.y = canvas.height + 50;
+        this.image = new Image();
+        this.image.src = 'img/snowman.png';
+        this.speed = 5;
+    }
+    move() {
+        this.y -= this.speed;
+    }
+  
+
+    port() {
+      //window.setTimeout(function(){ 
+        this.x = Math.floor(Math.random()*canvas.width -500)+330
+        this.y = canvas.height + 300;
+        
+   // }, 2000);
+       
+    }
+
+    draw() {
+        let obj = this;
+        this.image.onload = function () {
+            console.log(obj);
+            ctx.drawImage(obj.image, obj.x, obj.y);
+        };
+        ctx.drawImage(this.image, this.x, this.y );
+    }
+}
+
+
 
 class Trees {
     constructor(x, y) {
@@ -133,7 +165,7 @@ let arrX = [100, 850, 10, 950, -60, 1020, -60, 1020, -60, 1020, -60, 1020, -60, 
 let arrY = [-10, -10, 70, 70, 180, 180, 290, 290, 400, 400, 510, 510, 630, 630, 750, 750, 850, 850, ];
 
 let tree = []
-
+let snowman = []
 
 
 function create() {
@@ -142,14 +174,18 @@ function create() {
     }
 }
 create();
-
-
-
+function createsnowman() {
+    setTimeout(function(){ 
+        createsnowman();
+    }, 3000);
+    snowman.push(new SnowMans());
+}
+createsnowman();
+let stopky2 = window.setInterval(stopky, -10); 
 function drawAll() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     skier.move();
     skier.paint();
-    
     legs.move();
     legs.paint();
     start.move();
@@ -165,6 +201,36 @@ function drawAll() {
             tree[j].port();
         }
     }
+    if (skier.x < 100 || skier.x > canvas.width - 170){
+        if (confirm("Váš čas je : " + minuty + " minut " + sekundy + " sekund " + milisekundy + " milisekund ")) {
+            skier.y = -100;
+            skier.x = 500;
+            window.location.reload();
+        }
+    }
+
+//snowman[j].x + snowman[j].width/2 > skier.x && snowman[j].x + snowman[j].width/2 < skier.x + skier.width
+
+    for (let j = 0; j < snowman.length; j++) {
+        console.log(snowman[j]);
+        console.log(skier.x);
+        snowman[j].move();
+        snowman[j].draw();
+        if (snowman[j].y < -300) {
+
+            snowman[j].port();
+
+        }
+        if(snowman[j].x + 130 > skier.x && snowman[j].x + 130 < skier.x + 160 && snowman[j].y < skier.y && snowman[j].y + 100 > skier.y  ){
+            clearInterval(stopky2);
+            
+            if (confirm("Váš čas je : " + minuty + " minut " + sekundy + " sekund " + milisekundy + " milisekund ")) {
+                skier.y = -100;
+                skier.x = 500;
+                window.location.reload();
+            } 
+        }
+    }
 }
 
 function animate() {
@@ -175,23 +241,43 @@ function animate() {
 
 animate();
 
-/*class Snowmans{
-    constructor(){
-    x= Math.floor(Math.random() * (canvas.width -200 )) + 50;
-    y= canvas.height
+var myVar;
+
+function myFunction() {
+  myVar = setTimeout(function(){ alert("Hello"); }, 3000);
 }
 
-    draw() {
-        let obj = this;
-        this.image.onload = function () {
-            console.log(obj);
-            ctx.drawImage(obj.image, obj.x, obj.y, obj.width, obj.height);
-        };
-        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+function myStopFunction() {
+  clearTimeout(myVar);
+}
+
+//stopky
+let sekundy = 0;
+let milisekundy = 0;
+let minuty = 0; 
+
+//funkce pro stopky
+function stopky(){
+    milisekundy++;
+
+    if(milisekundy === 100){
+        milisekundy = 0;
+        sekundy ++;
+
+        if(sekundy === 60 ){
+            sekundy = 0;
+            minuty++;
+        }
     }
-}*/
+    //Zobrazí obnovený čas
+    document.getElementById("display").innerHTML = minuty + ":" + sekundy + "." + milisekundy;
+}
 
 
-/*objekt pro vykreslení*/
+document.body.addEventListener('keydown', function(event) {
+    skier.keys[event.code] = true;
+  });
 
-
+  document.body.addEventListener("keyup", function(event) { 
+    skier.keys[event.code] = false;
+  })
