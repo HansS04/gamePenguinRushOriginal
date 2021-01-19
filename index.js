@@ -47,7 +47,10 @@ let start = {
 let skier = {
     y: 170,
     x: canvas.width / 2 - 30,
-    keys : [],
+                //          
+    keys : [],  // tlacitka[5,6,7,8,9,10,11,12,a,j,k,78,jk]   
+
+
     speed : 5,
     move: function (){
         if (this.keys['KeyW']) {
@@ -182,6 +185,7 @@ function createsnowman() {
 }
 createsnowman();
 let stopky2 = window.setInterval(stopky, -10); 
+
 function drawAll() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     skier.move();
